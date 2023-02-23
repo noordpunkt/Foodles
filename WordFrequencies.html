@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Word Frequencies for Foodle</title>
+  </head>
+  <body>
+    <p>Enter a sentence (for example for favourite plates):</p>
+    <input type="text" id="input" />
+    <button onclick="showFrequencies()">Show Frequencies</button>
+    <div id="output"></div>
+
+    <script>
+      function wordFrequencies(sentence, n) {
+        // Split sentence into a list of words
+        const words = sentence.split(" ");
+
+        // Create a map to store the frequency of each word
+        const frequencies = new Map();
+        for (const word of words) {
+          const count = frequencies.get(word) || 0;
+          frequencies.set(word, count + 1);
+        }
+
+        // Sort words by frequency and then alphabetically
+        const sortedWords = Array.from(frequencies.entries()).sort((a, b) => {
+          if (a[1] !== b[1]) {
+            return b[1] - a[1];
+          } else {
+            return a[0].localeCompare(b[0]);
+          }
+        });
+
+        // Extract the top n words and their frequencies
+        const topNWords = sortedWords.slice(0, n).map(([word, count]) => ({
+          word,
+          count,
+        }));
+
+        return topNWords;
+      }
+
+      function showFrequencies() {
+        const input = document.getElementById("input");
+        const sentence = input.value.trim();
+        const frequencies = wordFrequencies(sentence, 3);
+        const output = document.getElementById("output");
+
+        let html = "<p>Top 3 word frequencies:</p>";
+        html += "<ul>";
+        for (const { word, count } of frequencies) {
+          html += `<li>${word}: ${count}</li>`;
+        }
+        html += "</ul>";
+
+        output.innerHTML = html;
+      }
+    </script>
+  </body>
+</html>
